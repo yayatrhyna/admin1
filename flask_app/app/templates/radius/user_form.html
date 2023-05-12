@@ -1,0 +1,123 @@
+{% extends 'base.html' %} {% block header %}
+<div class="app-page-title">
+  <div class="page-title-wrapper">
+    <div class="page-title-heading">
+      <div class="page-title-icon">
+        <i class="fa fa-users icon-gradient bg-happy-itmeo"></i>
+      </div>
+      <div>
+        {{ _('Users') }}
+        <div class="page-title-subheading">
+          {{ _('Users details and management.') }}
+        </div>
+      </div>
+    </div>
+    <div class="page-title-actions">
+      <button onclick="submitform()" class="btn-shadow btn btn-success">
+        {% if action == 'add' %}
+        <span class="btn-icon-wrapper pr-2 opacity-7">
+          <i class="fa fa-plus fa-w-20"></i>
+        </span>
+        <span>{{ _('Add') }}</span>
+        {% elif action == 'edit' %}
+        <span class="btn-icon-wrapper pr-2 opacity-7">
+          <i class="fa fa-edit fa-w-20"></i>
+        </span>
+        <span>{{ _('Edit') }}</span>
+        {% endif %}
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block container %}
+<form id="user-form" method="POST">
+  {{ form.csrf_token }}
+  <div class="row">
+    <div class="col-md-6">
+      <div class="main-card mb-3 card">
+        <div class="card-body">
+          <h5 class="card-title">{{ _('User account info') }}</h5>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="username">{{ form.username.label }}</label>
+                {% if 'username' in form_errors %}
+                {{ form.username(class='form-control is-invalid') }}
+                <div class="invalid-feedback">
+                  {{ form_errors["username"][0] }}
+                </div>
+                {% else %}
+                {{ form.username(class='form-control') }}
+                {% endif %}
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="group">{{ form.group.label }}</label>
+                {% if 'group' in form_errors %}
+                {{ form.group(class='form-control is-invalid') }}
+                <div class="invalid-feedback">
+                  {{ form_errors["group"][0] }}
+                </div>
+                {% else %}
+                {{ form.group(class='form-control') }}
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="email">{{ form.email.label }}</label>
+                {{ form.email(class='form-control') }}
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="password">{{ form.password.label }}</label>
+                {{ form.password(class='form-control') }}
+              </div>
+            </div>
+          </div>
+          <div class="form-check">
+            {{ form.active(class='form-check-input') }}
+            <label class="form-check-label" for="active">{{ _('Active') }}</label>
+          </div>
+          <div class="form-check">
+            {{ form.has_access(class='form-check-input') }}
+            <label class="form-check-label" for="has_access"
+              >{{ _('Can login into this system?') }}</label
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="main-card mb-3 card">
+        <div class="card-body">
+          <h5 class="card-title">{{ _('User details') }}</h5>
+          <div class="form-group">
+            <label for="name">{{ form.name.label }}</label>
+            {{ form.name(class='form-control') }}
+          </div>
+          <div class="form-group">
+            <label for="phone">{{ form.phone.label }}</label>
+            {{ form.phone(class='form-control') }}
+          </div>
+          <div class="form-group">
+            <label for="address">{{ form.address.label }}</label>
+            {{ form.address(class='form-control', style="min-height: 120px;") }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %} {% block scripts %}
+<script type="text/javascript">
+  function submitform() {
+    document.getElementById("user-form").submit();
+  }
+</script>
+{% endblock %}

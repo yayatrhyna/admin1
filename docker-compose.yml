@@ -1,0 +1,63 @@
+version: "3.2"
+
+services:
+  db:
+    image: postgres:9.6
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: radius
+      POSTGRES_USER: flask_fr_admin_user
+      POSTGRES_PASSWORD: 7zJ7Bek3V7?=9#r9
+    volumes:
+      - ./database/scripts:/docker-entrypoint-initdb.d
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - freeradius-admin-network
+  freeradius:
+    build:
+      context: ./freeradius
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports:
+      - 1812:1812/udp
+      - 1813:1813/udp
+    depends_on:
+      - db
+    networks:
+      - freeradius-admin-network
+    volumes:
+      - type: volume
+        source: dictionaries
+        target: /usr/share/freeradius
+        read_only: true
+  app:
+    build:
+      context: ./flask_app
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports:
+      - 8000:5000
+    depends_on:
+      - db
+      - freeradius
+    environment:
+      DATABASE_SERVER: db
+      DATABASE_USER: flask_fr_admin_user
+      DATABASE_PASSWORD: 7zJ7Bek3V7?=9#r9
+      DATABASE_NAME: radius
+    networks:
+      - freeradius-admin-network
+    volumes:
+      - type: volume
+        source: dictionaries
+        target: /usr/share/freeradius
+        read_only: true
+
+networks:
+  freeradius-admin-network:
+
+volumes:
+  dictionaries:
+  db_data:

@@ -1,0 +1,112 @@
+{% extends 'base.html' %} {% block header %}
+<div class="app-page-title">
+  <div class="page-title-wrapper">
+    <div class="page-title-heading">
+      <div class="page-title-icon">
+        <i class="fa fa-network-wired icon-gradient bg-happy-itmeo"></i>
+      </div>
+      <div>
+        {{ _("NAS") }}
+        <div class="page-title-subheading">
+          {{ _("NAS details and management.") }}
+        </div>
+      </div>
+    </div>
+    <div class="page-title-actions">
+      <button onclick="submitform()" class="btn-shadow btn btn-success">
+        {% if action == 'add' %}
+        <span class="btn-icon-wrapper pr-2 opacity-7">
+          <i class="fa fa-plus fa-w-20"></i>
+        </span>
+        <span>{{ _("Add") }}</span>
+        {% elif action == 'edit' %}
+        <span class="btn-icon-wrapper pr-2 opacity-7">
+          <i class="fa fa-edit fa-w-20"></i>
+        </span>
+        <span>{{ _("Edit") }}</span>
+        {% endif %}
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block container %}
+<form id="nas-form" method="POST">
+  {{ form.csrf_token }}
+  <div class="row">
+    <div class="col-md-6">
+      <div class="main-card mb-3 card">
+        <div class="card-body">
+          <h5 class="card-title">{{ _("Main info") }}</h5>
+          <div class="form-group">
+            <label for="name">{{ form.name.label }}</label>
+            {% if form.errors.get('name') %}
+            {{ form.name(class='form-control is-invalid') }}
+            <div class="invalid-feedback">{{ form_errors.get("name")[0] }}</div>
+            {% else %}
+            {{ form.name(class='form-control') }}
+            {% endif %}
+          </div>
+          <div class="form-group">
+            <label for="short_name">{{ form.short_name.label }}</label>
+            {{ form.short_name(class='form-control') }}
+          </div>
+          <div class="form-group">
+            <label for="secret">{{ form.secret.label }}</label>
+            {% if form.errors.get('secret') %}
+            {{ form.secret(class='form-control is-invalid') }}
+            <div class="invalid-feedback">
+              {{ form_errors.get("secret")[0] }}
+            </div>
+            {% else %}
+            {{ form.secret(class='form-control') }}
+            {% endif %}
+          </div>
+          <div class="form-group">
+            <label for="type">{{ form.type.label }}</label>
+            {% if form.VENDORS %} {% if form.errors.get('type') %}
+            {{ form.type(class='form-control is-invalid') }}
+            <div class="invalid-feedback">
+              {{ form_errors.get("type")[0] }}
+            </div>
+            {% else %}
+            {{ form.type(class='form-control') }}
+            {% endif %} {% else %}
+            {{ form.custom_type(class='form-control')}}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="main-card mb-3 card">
+        <div class="card-body">
+          <h5 class="card-title">{{ _("More details") }}</h5>
+          <div class="form-group">
+            <label for="server">{{ form.server.label }}</label>
+            {{ form.server(class='form-control') }}
+          </div>
+          <div class="form-group">
+            <label for="ports">{{ form.ports.label }}</label>
+            {{ form.ports(class='form-control') }}
+          </div>
+          <div class="form-group">
+            <label for="community">{{ form.community.label }}</label>
+            {{ form.community(class='form-control') }}
+          </div>
+          <div class="form-group">
+            <label for="description">{{ form.description.label }}</label>
+            {{ form.description(class='form-control', style="min-height: 120px;") }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %} {% block scripts %}
+<script type="text/javascript">
+  function submitform() {
+    document.getElementById("nas-form").submit();
+  }
+</script>
+{% endblock %}
